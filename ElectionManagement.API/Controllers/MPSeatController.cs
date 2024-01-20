@@ -11,26 +11,22 @@ namespace ElectionManagement.API.Controllers
     public class MPSeatController : ControllerBase
     {
         List<MPSeat> seats = new List<MPSeat>() { 
-            new MPSeat(1, "Const1", (int)State.Tamilnadu),
-            new MPSeat(2, "Const2", (int)State.Tamilnadu),
-            new MPSeat(3, "Const3", (int)State.Tamilnadu),
-            new MPSeat(4, "Const4", (int)State.Tamilnadu),
+            new MPSeat(){ ConstituencyId= 1, ConstituencyName= "Const1", StateId= (int)State.Tamilnadu},
+            new MPSeat(){ ConstituencyId= 2, ConstituencyName= "Const2", StateId= (int)State.Tamilnadu},
+            new MPSeat(){ ConstituencyId= 3, ConstituencyName= "Const3", StateId= (int)State.Tamilnadu},
+            new MPSeat(){ ConstituencyId= 4, ConstituencyName= "Const4", StateId= (int)State.Tamilnadu},
         };
 
-        // GET: api/<MPSeatController>
         [HttpGet]
         public IEnumerable<MPSeat> Get()
         {
             return seats;
         }
 
-        // POST api/<MPSeatController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        //[Authorize(Roles = "ElectionCommissioner")]
+        public void Post([FromBody] MPSeat seat)
         {
-            //deserialize 
-            MPSeat? seat = null;
-
             if (seat == null)
                 return;
 
@@ -38,8 +34,8 @@ namespace ElectionManagement.API.Controllers
         }
         
 
-        // DELETE api/<MPSeatController>/5
         [HttpDelete("{id}")]
+        //[Authorize(Roles = "ElectionCommissioner")]
         public void Delete(int id)
         {
             MPSeat? seat = seats.Find(x => x.ConstituencyId == id);

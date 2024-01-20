@@ -1,7 +1,8 @@
 ﻿namespace ElectionManagement.API.Models
 {
-    public class ElectionResult
+    public class Voting
     {
         public int CandidateId { get; set; }
+
     }
 }

@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ElectionManagement.API.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using static ElectionManagement.API.Models.MPSeat;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +11,62 @@ namespace ElectionManagement.API.Controllers
     [ApiController]
     public class VoterController : ControllerBase
     {
-        // GET: api/<VoterController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        List<Voter> voters = new List<Voter>()
         {
-            return new string[] { "value1", "value2" };
+            new Voter(){VoterId = 1, VoterName="aarav", Address="", ConstituencyId = 1, StateId=1, IsApproved=false },
+            new Voter(){VoterId = 1, VoterName="kishore", Address="", ConstituencyId = 2, StateId=1, IsApproved=false },
+            new Voter(){VoterId = 1, VoterName="raju", Address="", ConstituencyId = 3, StateId=1, IsApproved=false },
+        };
+
+        List<Voting> electionResult = new List<Voting>();
+
+        [HttpGet("GetVoters")]
+        public IEnumerable<Voter> Get()
+        {
+            return voters;
         }
 
-        // GET api/<VoterController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("GetElectionResult")]
+        public IEnumerable<Voting> GetElectionResult()
         {
-            return "value";
+            return electionResult;
         }
 
-        // POST api/<VoterController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+
+        [HttpPost(Name ="AddVoter")]
+        public void Post([FromBody] Voter value)
         {
+            if(value == null)
+            {
+                return;
+            }
+
+            voters.Add(value);
         }
 
-        // PUT api/<VoterController>/5
+        [HttpPost(Name ="CastVote")]
+        public void CastVote([FromBody] Voting value)
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            electionResult.Add(value);
+        }
+
+
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        //[Authorize(Roles = "ElectionCommissioner")]
+        public void ApproveVoter(int id, [FromBody] Voter value)
         {
+            Voter? voter = voters.Find(x => x.VoterId == id);
+
+            if (voter == null)
+                return;
+
+            voter.IsApproved = true ;
         }
 
-        // DELETE api/<VoterController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

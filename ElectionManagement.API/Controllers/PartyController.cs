@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ElectionManagement.API.Models;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +9,28 @@ namespace ElectionManagement.API.Controllers
     [ApiController]
     public class PartyController : ControllerBase
     {
-        // GET: api/<PartyController>
+        List<ElectionParty> parties = new List<ElectionParty>()
+        {
+            new ElectionParty(){ PartyId = 1, PartyName="ajp", PartySymbol=""},
+            new ElectionParty(){ PartyId = 2, PartyName="bjp", PartySymbol=""},
+        };
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<ElectionParty> Get()
         {
-            return new string[] { "value1", "value2" };
+            return parties;
         }
+       
 
-        // GET api/<PartyController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<PartyController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        //[Authorize(Roles = "ElectionCommissioner")]
+        public void Post([FromBody] ElectionParty value)
         {
-        }
+            if (value == null)
+                return;
 
-        // PUT api/<PartyController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
+            parties.Add(value);
         }
-
-        // DELETE api/<PartyController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+       
     }
 }
