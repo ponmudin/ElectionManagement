@@ -1,0 +1,793 @@
+{
+    "type": "database",
+    "name": "EMS",
+    "objects": [
+        {
+            "type": "table",
+            "database": null,
+            "name": "Candidate",
+            "withoutRowId": false,
+            "strict": false,
+            "ddl": "CREATE TABLE Candidate (CandidateId INTEGER PRIMARY KEY, CandidateName TEXT NOT NULL, PartyId INTEGER REFERENCES Party (PartyId), ConstituencyId INTEGER REFERENCES MPSeat (ConstituencyId))",
+            "columns": [
+                {
+                    "name": "CandidateId",
+                    "type": "INTEGER",
+                    "constraints": [
+                        {
+                            "type": "PRIMARY KEY",
+                            "definition": "PRIMARY KEY"
+                        }
+                    ]
+                },
+                {
+                    "name": "CandidateName",
+                    "type": "TEXT",
+                    "constraints": [
+                        {
+                            "type": "NOT NULL",
+                            "definition": "NOT NULL"
+                        }
+                    ]
+                },
+                {
+                    "name": "PartyId",
+                    "type": "INTEGER",
+                    "constraints": [
+                        {
+                            "type": "FOREIGN KEY",
+                            "definition": "REFERENCES Party (PartyId)"
+                        }
+                    ]
+                },
+                {
+                    "name": "ConstituencyId",
+                    "type": "INTEGER",
+                    "constraints": [
+                        {
+                            "type": "FOREIGN KEY",
+                            "definition": "REFERENCES MPSeat (ConstituencyId)"
+                        }
+                    ]
+                }
+            ],
+            "rows": [
+                [
+                    1,
+                    "Jagathrakshakan",
+                    1,
+                    1
+                ],
+                [
+                    2,
+                    "Vishnu Prasad",
+                    2,
+                    1
+                ],
+                [
+                    3,
+                    "P.R. Natarajan",
+                    3,
+                    1
+                ],
+                [
+                    4,
+                    "Ramesh",
+                    4,
+                    1
+                ],
+                [
+                    5,
+                    "Senthilkumar",
+                    1,
+                    2
+                ],
+                [
+                    6,
+                    "Veluchamy",
+                    2,
+                    2
+                ],
+                [
+                    7,
+                    "Gautham Sigamani",
+                    3,
+                    2
+                ],
+                [
+                    8,
+                    "G. Selvam",
+                    4,
+                    2
+                ],
+                [
+                    9,
+                    "Vasanthakumar",
+                    1,
+                    3
+                ],
+                [
+                    10,
+                    "Jothimani",
+                    2,
+                    3
+                ],
+                [
+                    11,
+                    "Chellakumar",
+                    3,
+                    3
+                ],
+                [
+                    12,
+                    "Venkatesan",
+                    4,
+                    3
+                ],
+                [
+                    13,
+                    "Ramalingam",
+                    1,
+                    4
+                ],
+                [
+                    14,
+                    "Selvaraj",
+                    2,
+                    4
+                ],
+                [
+                    15,
+                    "Chinnaraj ",
+                    3,
+                    4
+                ],
+                [
+                    16,
+                    "Paarivendhar",
+                    4,
+                    4
+                ]
+            ]
+        },
+        {
+            "type": "table",
+            "database": null,
+            "name": "Election",
+            "withoutRowId": false,
+            "strict": false,
+            "ddl": "CREATE TABLE Election (VoterId INTEGER NOT NULL UNIQUE, CandidateId INTEGER NOT NULL, VotedDateTime TEXT NOT NULL)",
+            "columns": [
+                {
+                    "name": "VoterId",
+                    "type": "INTEGER",
+                    "constraints": [
+                        {
+                            "type": "NOT NULL",
+                            "definition": "NOT NULL "
+                        },
+                        {
+                            "type": "UNIQUE",
+                            "definition": "UNIQUE"
+                        }
+                    ]
+                },
+                {
+                    "name": "CandidateId",
+                    "type": "INTEGER",
+                    "constraints": [
+                        {
+                            "type": "NOT NULL",
+                            "definition": "NOT NULL"
+                        }
+                    ]
+                },
+                {
+                    "name": "VotedDateTime",
+                    "type": "TEXT",
+                    "constraints": [
+                        {
+                            "type": "NOT NULL",
+                            "definition": "NOT NULL"
+                        }
+                    ]
+                }
+            ],
+            "rows": [
+                [
+                    1,
+                    1,
+                    "21-01-2024 03:00:13 PM"
+                ],
+                [
+                    2,
+                    1,
+                    "21-01-2024 03:01:11 PM"
+                ],
+                [
+                    3,
+                    1,
+                    "21-01-2024 03:01:18 PM"
+                ],
+                [
+                    4,
+                    1,
+                    "21-01-2024 03:01:23 PM"
+                ],
+                [
+                    5,
+                    2,
+                    "21-01-2024 03:01:33 PM"
+                ],
+                [
+                    6,
+                    5,
+                    "21-01-2024 03:03:22 PM"
+                ],
+                [
+                    7,
+                    5,
+                    "21-01-2024 03:03:26 PM"
+                ],
+                [
+                    8,
+                    5,
+                    "21-01-2024 03:03:30 PM"
+                ],
+                [
+                    9,
+                    5,
+                    "21-01-2024 03:03:37 PM"
+                ],
+                [
+                    10,
+                    7,
+                    "21-01-2024 03:03:54 PM"
+                ],
+                [
+                    11,
+                    7,
+                    "21-01-2024 03:03:57 PM"
+                ],
+                [
+                    12,
+                    9,
+                    "21-01-2024 03:04:53 PM"
+                ],
+                [
+                    13,
+                    9,
+                    "21-01-2024 03:04:57 PM"
+                ],
+                [
+                    14,
+                    10,
+                    "21-01-2024 03:05:05 PM"
+                ],
+                [
+                    15,
+                    11,
+                    "21-01-2024 03:05:13 PM"
+                ],
+                [
+                    16,
+                    11,
+                    "21-01-2024 03:05:16 PM"
+                ],
+                [
+                    17,
+                    13,
+                    "21-01-2024 03:05:57 PM"
+                ],
+                [
+                    18,
+                    13,
+                    "21-01-2024 03:06:03 PM"
+                ],
+                [
+                    19,
+                    13,
+                    "21-01-2024 03:06:10 PM"
+                ],
+                [
+                    20,
+                    15,
+                    "21-01-2024 03:06:21 PM"
+                ],
+                [
+                    21,
+                    15,
+                    "21-01-2024 03:06:24 PM"
+                ]
+            ]
+        },
+        {
+            "type": "table",
+            "database": null,
+            "name": "MPSeat",
+            "withoutRowId": false,
+            "strict": false,
+            "ddl": "CREATE TABLE MPSeat (ConstituencyId INTEGER PRIMARY KEY, ConstituencyName TEXT NOT NULL, StateId INTEGER)",
+            "columns": [
+                {
+                    "name": "ConstituencyId",
+                    "type": "INTEGER",
+                    "constraints": [
+                        {
+                            "type": "PRIMARY KEY",
+                            "definition": "PRIMARY KEY"
+                        }
+                    ]
+                },
+                {
+                    "name": "ConstituencyName",
+                    "type": "TEXT",
+                    "constraints": [
+                        {
+                            "type": "NOT NULL",
+                            "definition": "NOT NULL"
+                        }
+                    ]
+                },
+                {
+                    "name": "StateId",
+                    "type": "INTEGER"
+                }
+            ],
+            "rows": [
+                [
+                    1,
+                    "Chennai",
+                    0
+                ],
+                [
+                    2,
+                    "Thiruvallur",
+                    0
+                ],
+                [
+                    3,
+                    "Kancheepuram",
+                    0
+                ],
+                [
+                    4,
+                    "Vellore",
+                    0
+                ],
+                [
+                    5,
+                    "Tirunelveli",
+                    0
+                ],
+                [
+                    6,
+                    "Madurai",
+                    0
+                ],
+                [
+                    7,
+                    "Salem",
+                    0
+                ],
+                [
+                    8,
+                    "Trichy",
+                    0
+                ]
+            ]
+        },
+        {
+            "type": "table",
+            "database": null,
+            "name": "Party",
+            "withoutRowId": false,
+            "strict": false,
+            "ddl": "CREATE TABLE Party (PartyId INTEGER PRIMARY KEY, PartyName TEXT NOT NULL, PartySymbol TEXT)",
+            "columns": [
+                {
+                    "name": "PartyId",
+                    "type": "INTEGER",
+                    "constraints": [
+                        {
+                            "type": "PRIMARY KEY",
+                            "definition": "PRIMARY KEY"
+                        }
+                    ]
+                },
+                {
+                    "name": "PartyName",
+                    "type": "TEXT",
+                    "constraints": [
+                        {
+                            "type": "NOT NULL",
+                            "definition": "NOT NULL"
+                        }
+                    ]
+                },
+                {
+                    "name": "PartySymbol",
+                    "type": "TEXT"
+                }
+            ],
+            "rows": [
+                [
+                    1,
+                    "BJP",
+                    null
+                ],
+                [
+                    2,
+                    "Congress",
+                    null
+                ],
+                [
+                    3,
+                    "ADMK",
+                    null
+                ],
+                [
+                    4,
+                    "DMK",
+                    null
+                ],
+                [
+                    5,
+                    "AAP",
+                    null
+                ],
+                [
+                    6,
+                    "RJP",
+                    null
+                ],
+                [
+                    7,
+                    "BSP",
+                    null
+                ],
+                [
+                    8,
+                    "test",
+                    null
+                ]
+            ]
+        },
+        {
+            "type": "table",
+            "database": null,
+            "name": "State",
+            "withoutRowId": false,
+            "strict": false,
+            "ddl": "CREATE TABLE State (StateId INTEGER PRIMARY KEY, StateName TEXT NOT NULL)",
+            "columns": [
+                {
+                    "name": "StateId",
+                    "type": "INTEGER",
+                    "constraints": [
+                        {
+                            "type": "PRIMARY KEY",
+                            "definition": "PRIMARY KEY"
+                        }
+                    ]
+                },
+                {
+                    "name": "StateName",
+                    "type": "TEXT",
+                    "constraints": [
+                        {
+                            "type": "NOT NULL",
+                            "definition": "NOT NULL"
+                        }
+                    ]
+                }
+            ],
+            "rows": [
+                [
+                    0,
+                    "Tamilnadu"
+                ],
+                [
+                    1,
+                    "Kerala"
+                ],
+                [
+                    2,
+                    "Andra Pradesh"
+                ],
+                [
+                    3,
+                    "Telengana"
+                ],
+                [
+                    4,
+                    "Karnataka"
+                ],
+                [
+                    5,
+                    "Maharashtra"
+                ]
+            ]
+        },
+        {
+            "type": "table",
+            "database": null,
+            "name": "Voter",
+            "withoutRowId": false,
+            "strict": false,
+            "ddl": "CREATE TABLE Voter (VoterId INTEGER PRIMARY KEY, VoterName TEXT NOT NULL, Address TEXT, Photo TEXT, ConstituencyId INTEGER REFERENCES MPSeat (ConstituencyId), IsApproved INTEGER NOT NULL DEFAULT (0))",
+            "columns": [
+                {
+                    "name": "VoterId",
+                    "type": "INTEGER",
+                    "constraints": [
+                        {
+                            "type": "PRIMARY KEY",
+                            "definition": "PRIMARY KEY"
+                        }
+                    ]
+                },
+                {
+                    "name": "VoterName",
+                    "type": "TEXT",
+                    "constraints": [
+                        {
+                            "type": "NOT NULL",
+                            "definition": "NOT NULL"
+                        }
+                    ]
+                },
+                {
+                    "name": "Address",
+                    "type": "TEXT"
+                },
+                {
+                    "name": "Photo",
+                    "type": "TEXT"
+                },
+                {
+                    "name": "ConstituencyId",
+                    "type": "INTEGER",
+                    "constraints": [
+                        {
+                            "type": "FOREIGN KEY",
+                            "definition": "REFERENCES MPSeat (ConstituencyId)"
+                        }
+                    ]
+                },
+                {
+                    "name": "IsApproved",
+                    "type": "INTEGER",
+                    "constraints": [
+                        {
+                            "type": "NOT NULL",
+                            "definition": "NOT NULL "
+                        },
+                        {
+                            "type": "DEFAULT",
+                            "definition": "DEFAULT (0)"
+                        }
+                    ]
+                }
+            ],
+            "rows": [
+                [
+                    1,
+                    "Jayakumar",
+                    null,
+                    null,
+                    1,
+                    1
+                ],
+                [
+                    2,
+                    "Pazhani",
+                    null,
+                    null,
+                    1,
+                    1
+                ],
+                [
+                    3,
+                    "Arasi",
+                    null,
+                    null,
+                    1,
+                    1
+                ],
+                [
+                    4,
+                    "Murugan",
+                    null,
+                    null,
+                    1,
+                    1
+                ],
+                [
+                    5,
+                    "Azhagu",
+                    null,
+                    null,
+                    1,
+                    1
+                ],
+                [
+                    6,
+                    "Mathi",
+                    null,
+                    null,
+                    2,
+                    1
+                ],
+                [
+                    7,
+                    "Selvi",
+                    null,
+                    null,
+                    2,
+                    1
+                ],
+                [
+                    8,
+                    "Mani",
+                    null,
+                    null,
+                    2,
+                    1
+                ],
+                [
+                    9,
+                    "Anbu",
+                    null,
+                    null,
+                    2,
+                    1
+                ],
+                [
+                    10,
+                    "Velan",
+                    null,
+                    null,
+                    2,
+                    1
+                ],
+                [
+                    11,
+                    "Arul",
+                    null,
+                    null,
+                    2,
+                    1
+                ],
+                [
+                    12,
+                    "Kavi",
+                    null,
+                    null,
+                    3,
+                    1
+                ],
+                [
+                    13,
+                    "Nila",
+                    null,
+                    null,
+                    3,
+                    1
+                ],
+                [
+                    14,
+                    "Devi",
+                    null,
+                    null,
+                    3,
+                    1
+                ],
+                [
+                    15,
+                    "Kala",
+                    null,
+                    null,
+                    3,
+                    1
+                ],
+                [
+                    16,
+                    "Latha",
+                    null,
+                    null,
+                    3,
+                    1
+                ],
+                [
+                    17,
+                    "Meena",
+                    null,
+                    null,
+                    4,
+                    1
+                ],
+                [
+                    18,
+                    "Radhakrishnan",
+                    null,
+                    null,
+                    4,
+                    1
+                ],
+                [
+                    19,
+                    "Raghavan",
+                    null,
+                    null,
+                    4,
+                    1
+                ],
+                [
+                    20,
+                    "Rajadurai",
+                    null,
+                    null,
+                    4,
+                    1
+                ],
+                [
+                    21,
+                    "Rajaratnam",
+                    null,
+                    null,
+                    4,
+                    1
+                ],
+                [
+                    22,
+                    "Ramalingam",
+                    null,
+                    null,
+                    5,
+                    0
+                ],
+                [
+                    23,
+                    "Ramanathan",
+                    null,
+                    null,
+                    5,
+                    0
+                ],
+                [
+                    24,
+                    "Ranganathan",
+                    null,
+                    null,
+                    5,
+                    0
+                ],
+                [
+                    25,
+                    "Ramasamy",
+                    null,
+                    null,
+                    5,
+                    0
+                ],
+                [
+                    26,
+                    "Thirumagal",
+                    null,
+                    null,
+                    5,
+                    0
+                ],
+                [
+                    27,
+                    "Ilangovan",
+                    null,
+                    null,
+                    5,
+                    0
+                ]
+            ]
+        }
+    ]
+}
