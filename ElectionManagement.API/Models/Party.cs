@@ -1,6 +1,6 @@
 ﻿namespace ElectionManagement.API.Models
 {
-    public class ElectionParty
+    public class Party
     {
         public int PartyId { get; set; }
         public string PartyName { get; set; } = string.Empty;

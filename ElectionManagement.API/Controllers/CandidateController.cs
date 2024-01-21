@@ -1,5 +1,7 @@
-﻿using ElectionManagement.API.Models;
+﻿using Dapper;
+using ElectionManagement.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.Sqlite;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -10,28 +12,45 @@ namespace ElectionManagement.API.Controllers
     //[Authorize(Roles = "ElectionCommissioner")]
     public class CandidateController : ControllerBase
     {
-        List<Candidate> candidates = new List<Candidate>()
+        private readonly ILogger<CandidateController> _logger;
+        public SqliteConnection DbConnection { get; set; }
+
+        public CandidateController(IDatabaseContext context, ILogger<CandidateController> logger)
         {
-            new Candidate(){CandidateId=1, CandidateName="Ramesh", ConstituencyId=1, StateId=0, PartyId= 1},
-            new Candidate(){CandidateId=2, CandidateName="Rakesh", ConstituencyId=1, StateId=0, PartyId= 1},
-            new Candidate(){CandidateId=3, CandidateName="Rajesh", ConstituencyId=1, StateId=0, PartyId= 1},
-        };
+            this.DbConnection = context.DbConnection;
+            _logger = logger;
+        }
 
         [HttpGet]
-        public IEnumerable<Candidate> Get()
+        public Task<IEnumerable<Candidate>> GetCandidates()
         {
-            return candidates;
+            _logger.LogInformation(nameof(GetCandidates), DateTime.UtcNow.ToLongTimeString());
+           var sql = "select * from Candidate";
+            return DbConnection.QueryAsync<Candidate>(sql);
+        }
+
+        [HttpGet("{id}")]
+        public Task<IEnumerable<dynamic>> GetCandidatesByConstituency(int id)
+        {
+            var sql = $"select cd.CandidateId, cd.CandidateName, pt.PartyName, mp.ConstituencyId, mp.ConstituencyName from Candidate cd " +
+                                 $"join Party pt on cd.PartyId = pt.PartyId " +
+                                 $"join MPSeat mp on mp.ConstituencyId = cd.ConstituencyId " +
+                                 $"where cd.ConstituencyId = {id} ";
+            return DbConnection.QueryAsync(sql);
         }
 
         [HttpPost]
-        public void Post([FromBody] Candidate value)
+        //[Authorize(Roles = "ElectionCommissioner")]
+        public IActionResult AddNewCandidate([FromBody] Candidate value)
         {
-            if(value == null)
-            {
-                return;
-            }
+            if (value == null)
+                return BadRequest();
 
-            candidates.Add(value);
+            var sql = $"insert into Candidate(CandidateName, PartyId, ConstituencyId) values ('{value.CandidateName}', {value.PartyId}, {value.ConstituencyId})";
+
+            var result = DbConnection.ExecuteAsync(sql);
+
+            return result.Result > 0 ? CreatedAtAction("AddNewCandidate", result.Result) : NoContent();
         }
         
     }

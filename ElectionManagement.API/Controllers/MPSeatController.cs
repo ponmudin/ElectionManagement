@@ -1,5 +1,8 @@
-﻿using ElectionManagement.API.Models;
+﻿using Dapper;
+using ElectionManagement.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.Sqlite;
+using Newtonsoft.Json.Linq;
 using static ElectionManagement.API.Models.MPSeat;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -10,41 +13,44 @@ namespace ElectionManagement.API.Controllers
     [ApiController]
     public class MPSeatController : ControllerBase
     {
-        List<MPSeat> seats = new List<MPSeat>() { 
-            new MPSeat(){ ConstituencyId= 1, ConstituencyName= "Const1", StateId= (int)State.Tamilnadu},
-            new MPSeat(){ ConstituencyId= 2, ConstituencyName= "Const2", StateId= (int)State.Tamilnadu},
-            new MPSeat(){ ConstituencyId= 3, ConstituencyName= "Const3", StateId= (int)State.Tamilnadu},
-            new MPSeat(){ ConstituencyId= 4, ConstituencyName= "Const4", StateId= (int)State.Tamilnadu},
-        };
+        public SqliteConnection DbConnection { get; set; }
+
+        public MPSeatController(IDatabaseContext context)
+        {
+            this.DbConnection = context.DbConnection;
+        }
 
         [HttpGet]
-        public IEnumerable<MPSeat> Get()
+        public Task<IEnumerable<MPSeat>> GetMPSeats()
         {
-            return seats;
+            var sql = "select * from MPSeat";
+            return DbConnection.QueryAsync<MPSeat>(sql);
         }
 
         [HttpPost]
         //[Authorize(Roles = "ElectionCommissioner")]
-        public void Post([FromBody] MPSeat seat)
+        public IActionResult AddNewMPSeat([FromBody] MPSeat value)
         {
-            if (seat == null)
-                return;
+            if (value == null)
+                return BadRequest();
 
-            seats.Add(seat);
+            var sql = $"insert into MPSeat(ConstituencyName, StateId) values ('{value.ConstituencyName}', '{value.StateId}')";
+
+            var result = DbConnection.ExecuteAsync(sql);
+
+            return result.Result > 0 ? CreatedAtAction("AddNewMPSeat", result.Result) : NoContent();
         }
         
 
         [HttpDelete("{id}")]
         //[Authorize(Roles = "ElectionCommissioner")]
-        public void Delete(int id)
+        public IActionResult DeleteMPSeat(int id)
         {
-            MPSeat? seat = seats.Find(x => x.ConstituencyId == id);
+            var sql = $"delete from MPSeat where SeatId = {id}";
 
-            if (seat == null)
-                return;
+            var result = DbConnection.ExecuteAsync(sql);
 
-            int index = seats.IndexOf(seat);
-            seats.RemoveAt(index);
+            return result.Result > 0 ? Ok() : NoContent();
         }
     }
 }

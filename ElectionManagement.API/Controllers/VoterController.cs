@@ -1,6 +1,8 @@
-﻿using ElectionManagement.API.Models;
+﻿using Dapper;
+using ElectionManagement.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.Sqlite;
 using static ElectionManagement.API.Models.MPSeat;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -11,61 +13,66 @@ namespace ElectionManagement.API.Controllers
     [ApiController]
     public class VoterController : ControllerBase
     {
-        List<Voter> voters = new List<Voter>()
-        {
-            new Voter(){VoterId = 1, VoterName="aarav", Address="", ConstituencyId = 1, StateId=1, IsApproved=false },
-            new Voter(){VoterId = 1, VoterName="kishore", Address="", ConstituencyId = 2, StateId=1, IsApproved=false },
-            new Voter(){VoterId = 1, VoterName="raju", Address="", ConstituencyId = 3, StateId=1, IsApproved=false },
-        };
+        public SqliteConnection DbConnection { get; set; }
 
-        List<Voting> electionResult = new List<Voting>();
+        public VoterController(IDatabaseContext context)
+        {
+            this.DbConnection = context.DbConnection;
+        }
 
         [HttpGet("GetVoters")]
-        public IEnumerable<Voter> Get()
+        public Task<IEnumerable<Voter>> GetVoters()
         {
-            return voters;
+            var sql = "select * from Voter";
+            return DbConnection.QueryAsync<Voter>(sql);
         }
 
-        [HttpGet("GetElectionResult")]
-        public IEnumerable<Voting> GetElectionResult()
-        {
-            return electionResult;
-        }
-
-
-        [HttpPost(Name ="AddVoter")]
-        public void Post([FromBody] Voter value)
-        {
-            if(value == null)
-            {
-                return;
-            }
-
-            voters.Add(value);
-        }
-
-        [HttpPost(Name ="CastVote")]
-        public void CastVote([FromBody] Voting value)
+        [HttpPost("RegisterVoter")]
+        public IActionResult RegisterVoter([FromBody] Voter value)
         {
             if (value == null)
-            {
-                return;
-            }
+                return BadRequest();
 
-            electionResult.Add(value);
+            var sql = $"insert into Voter(VoterName, ConstituencyId) values ('{value.VoterName}', {value.ConstituencyId})";
+
+            var result = DbConnection.ExecuteAsync(sql);
+
+            return result.Result > 0 ? CreatedAtAction("RegisterVoter", result.Result) : NoContent();
         }
-
 
         [HttpPut("{id}")]
         //[Authorize(Roles = "ElectionCommissioner")]
-        public void ApproveVoter(int id, [FromBody] Voter value)
+        public IActionResult ApproveVoter(int id)
         {
-            Voter? voter = voters.Find(x => x.VoterId == id);
+            var sql = $"update Voter set isApproved = true where voterId = {id}";
 
-            if (voter == null)
-                return;
+            var result = DbConnection.ExecuteAsync(sql);
 
-            voter.IsApproved = true ;
+            return result.Result > 0 ? Ok() : NoContent();
+        }
+
+
+        [HttpPost("CastVote")]
+        public IActionResult CastVote([FromBody] Election value)
+        {
+            if (value == null)
+                return BadRequest();
+
+            var sql = $"insert into Election(VoterId, CandidateId, VotedDateTime) values ({value.VoterId}, {value.CandidateId}, '{DateTime.Now}')";
+
+            var result = DbConnection.ExecuteAsync(sql);
+
+            return result.Result > 0 ? CreatedAtAction("CastVote", result.Result) : NoContent();
+        }
+
+        [HttpGet("GetElectionResult")]
+        public Task<IEnumerable<dynamic>> GetElectionResult()
+        {
+            var sql = "select pt.PartyName, count(el.CandidateId) as VoteCount from Election el " +
+                               "join Candidate cd ON el.CandidateId = cd.CandidateId " +
+                                "join Party pt ON pt.PartyId = cd.PartyId " +
+                                "group by pt.PartyName" ;
+            return DbConnection.QueryAsync(sql);
         }
 
     }

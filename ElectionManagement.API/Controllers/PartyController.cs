@@ -1,5 +1,7 @@
-﻿using ElectionManagement.API.Models;
+﻿using Dapper;
+using ElectionManagement.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.Sqlite;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -9,27 +11,32 @@ namespace ElectionManagement.API.Controllers
     [ApiController]
     public class PartyController : ControllerBase
     {
-        List<ElectionParty> parties = new List<ElectionParty>()
+        public SqliteConnection DbConnection { get; set; }
+
+        public PartyController(IDatabaseContext context)
         {
-            new ElectionParty(){ PartyId = 1, PartyName="ajp", PartySymbol=""},
-            new ElectionParty(){ PartyId = 2, PartyName="bjp", PartySymbol=""},
-        };
+            this.DbConnection = context.DbConnection;
+        }
 
         [HttpGet]
-        public IEnumerable<ElectionParty> Get()
+        public Task<IEnumerable<Party>> GetParties()
         {
-            return parties;
+            var sql = "select * from Party";
+            return DbConnection.QueryAsync<Party>(sql);
         }
-       
 
         [HttpPost]
         //[Authorize(Roles = "ElectionCommissioner")]
-        public void Post([FromBody] ElectionParty value)
+        public IActionResult AddNewParty([FromBody] Party value)
         {
             if (value == null)
-                return;
+                return BadRequest();
 
-            parties.Add(value);
+            var sql = $"insert into Party(PartyName) values ('{value.PartyName}')";
+
+            var result = DbConnection.ExecuteAsync(sql);
+
+            return result.Result > 0 ? CreatedAtAction("AddNewParty", result.Result) : NoContent();
         }
        
     }
