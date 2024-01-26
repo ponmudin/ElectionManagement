@@ -25,7 +25,7 @@ namespace ElectionManagement.API.Controllers
         public Task<IEnumerable<Candidate>> GetCandidates()
         {
             _logger.LogInformation(nameof(GetCandidates), DateTime.UtcNow.ToLongTimeString());
-           var sql = "select * from Candidate";
+            var sql = "select * from Candidate";
             return DbConnection.QueryAsync<Candidate>(sql);
         }
 
@@ -43,8 +43,10 @@ namespace ElectionManagement.API.Controllers
         //[Authorize(Roles = "ElectionCommissioner")]
         public IActionResult AddNewCandidate([FromBody] Candidate value)
         {
-            if (value == null)
+            if (value == null || !ModelState.IsValid)
+            {
                 return BadRequest();
+            }
 
             var sql = $"insert into Candidate(CandidateName, PartyId, ConstituencyId) values ('{value.CandidateName}', {value.PartyId}, {value.ConstituencyId})";
 
@@ -52,6 +54,6 @@ namespace ElectionManagement.API.Controllers
 
             return result.Result > 0 ? CreatedAtAction("AddNewCandidate", result.Result) : NoContent();
         }
-        
     }
+
 }
