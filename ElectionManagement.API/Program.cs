@@ -1,4 +1,6 @@
 using ElectionManagement.API;
+using ElectionManagement.API.Filters;
+using ElectionManagement.API.Middleware;
 using ElectionManagement.API.Models;
 using ElectionManagement.API.ModelValidator;
 using FluentValidation;
@@ -17,6 +19,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<IDatabaseContext, DatabaseContext>();
 builder.Services.AddScoped<IValidator<Candidate>, CandidateValidator>();
+builder.Services.AddScoped<ExceptionFilter>();
 
 //TODO
 //AddAuthentication
@@ -36,6 +39,8 @@ app.UseHttpsRedirection();
 //Authentication
 
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapControllers();
 

@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using ElectionManagement.API.Filters;
 using ElectionManagement.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
@@ -22,6 +23,7 @@ namespace ElectionManagement.API.Controllers
         }
 
         [HttpGet]
+        [ServiceFilter(typeof(ExceptionFilter))]
         public Task<IEnumerable<Candidate>> GetCandidates()
         {
             _logger.LogInformation(nameof(GetCandidates), DateTime.UtcNow.ToLongTimeString());
@@ -41,6 +43,7 @@ namespace ElectionManagement.API.Controllers
 
         [HttpPost]
         //[Authorize(Roles = "ElectionCommissioner")]
+        //[ServiceFilter(typeof(ExceptionFilter))]
         public IActionResult AddNewCandidate([FromBody] Candidate value)
         {
             if (value == null || !ModelState.IsValid)
